@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wolfie · Maths revision</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#241640; --deep:#3D2668; --accent:#6B3FB5; --accent2:#8B5CF6;
+    --light:#A78BDA; --t1:#F1ECFA; --t2:#F8F6FD; --t3:#E4DAF6;
+    --grey:#5A5368; --line:#D8CEEC;
+    --ok:#1F7A4D; --okbg:#E4F4EA; --okline:#9DD4B2;
+    --no:#B3342F; --nobg:#FCECEA; --noline:#E8A9A4;
+    --gold:#D98A1F; --goldbg:#FDF2DF;
+    --body:'Atkinson Hyperlegible',system-ui,-apple-system,sans-serif;
+    --disp:'Bricolage Grotesque','Atkinson Hyperlegible',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;background:var(--t2);color:var(--ink);font-family:var(--body);font-size:17px}
+  body{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+  body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);
+    background:var(--ink);z-index:40}
+
+  header{
+    position:sticky;top:env(safe-area-inset-top,0px);z-index:30;
+    background:var(--ink);color:#fff;padding:.7rem 1rem;
+    display:flex;align-items:center;gap:.6rem;
+  }
+  header .nm{font-family:var(--disp);font-weight:800;font-size:1rem;flex:1;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+  header .pill{
+    background:rgba(255,255,255,.14);border-radius:999px;padding:.2rem .6rem;
+    font-size:.82rem;font-weight:700;white-space:nowrap;
+  }
+  header .pill.fire{background:var(--gold);color:#2b1a00}
+
+  .bar{height:7px;background:var(--t3);position:relative;overflow:hidden}
+  .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));
+    width:0;transition:width .45s cubic-bezier(.3,1.2,.5,1)}
+
+  main{max-width:46rem;margin:0 auto;padding:1rem 1rem 6rem}
+
+  h1{font-family:var(--disp);font-weight:800;font-size:1.85rem;line-height:1.1;margin:.4rem 0 .4rem}
+  .lede{color:var(--grey);margin:0 0 1.2rem;line-height:1.5}
+
+  /* ---- overall progress panel ---- */
+  .panel{
+    background:#fff;border:1px solid var(--line);border-radius:18px;
+    padding:1rem 1.1rem;margin:0 0 1.1rem;
+  }
+  .ptop{display:flex;align-items:baseline;gap:.5rem;margin-bottom:.55rem}
+  .ptop b{font-family:var(--disp);font-size:1.5rem;font-weight:800}
+  .ptop span{color:var(--grey);font-size:.88rem;flex:1}
+  .track{height:16px;border-radius:999px;background:var(--t3);position:relative;overflow:hidden}
+  .track i{display:block;height:100%;border-radius:999px;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));width:0;
+    transition:width .5s cubic-bezier(.3,1.2,.5,1)}
+  .goal{position:absolute;top:-4px;bottom:-4px;width:3px;background:var(--gold);border-radius:2px}
+  .goaltag{display:flex;justify-content:flex-end;margin-top:.35rem}
+  .goaltag span{font-size:.78rem;color:var(--gold);font-weight:700}
+
+  /* ---- topic cards ---- */
+  .card{
+    display:block;width:100%;text-align:left;background:#fff;border:1px solid var(--line);
+    border-radius:16px;padding:.9rem 1rem;margin:0 0 .7rem;cursor:pointer;
+    font:inherit;color:inherit;transition:transform .12s,box-shadow .12s;
+  }
+  .card:active{transform:scale(.985)}
+  .card:hover{box-shadow:0 4px 16px rgba(60,30,110,.1)}
+  .crow{display:flex;align-items:center;gap:.8rem}
+  .ico{
+    flex:0 0 44px;height:44px;border-radius:13px;background:var(--t1);color:var(--accent);
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--disp);font-weight:800;font-size:1.05rem;
+  }
+  .card.done .ico{background:var(--okbg);color:var(--ok)}
+  .cmid{flex:1;min-width:0}
+  .cmid b{font-family:var(--disp);font-weight:800;font-size:1.06rem;display:block}
+  .cmid span{color:var(--grey);font-size:.84rem}
+  .pct{font-family:var(--disp);font-weight:800;font-size:1rem;color:var(--accent)}
+  .card.done .pct{color:var(--ok)}
+  .mini{height:6px;border-radius:999px;background:var(--t3);margin-top:.55rem;overflow:hidden}
+  .mini i{display:block;height:100%;background:var(--accent);width:0;border-radius:999px;
+    transition:width .4s}
+  .card.done .mini i{background:var(--ok)}
+
+  .testcard{background:linear-gradient(135deg,var(--ink),var(--accent));border:none;color:#fff}
+  .testcard .ico{background:rgba(255,255,255,.16);color:#fff}
+  .testcard .cmid span{color:rgba(255,255,255,.75)}
+  .testcard .pct{color:#fff}
+  .locked{opacity:.55}
+
+  /* ---- learn + question screens ---- */
+  .tag{
+    display:inline-block;background:var(--t1);color:var(--accent);
+    border-radius:999px;padding:.2rem .7rem;font-size:.74rem;font-weight:700;
+    letter-spacing:.07em;text-transform:uppercase;margin-bottom:.6rem;
+  }
+  .tag.qq{background:var(--goldbg);color:var(--gold)}
+  .sheet{background:#fff;border:1px solid var(--line);border-radius:18px;padding:1.1rem 1.15rem}
+  h2{font-family:var(--disp);font-weight:800;font-size:1.4rem;line-height:1.2;margin:0 0 .6rem}
+  .big{font-size:1.06rem;line-height:1.5;margin:0 0 .8rem}
+  .work{
+    font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.93rem;line-height:1.6;
+    background:var(--t2);border:1px solid var(--line);border-radius:12px;
+    padding:.85rem .95rem;white-space:pre;overflow-x:auto;margin:.8rem 0;
+  }
+  .tip{background:var(--goldbg);border-radius:12px;padding:.8rem .9rem;margin:.8rem 0 0;
+    font-size:.95rem;line-height:1.5}
+  .tip b{color:var(--gold)}
+  .hint{color:var(--grey);font-size:.85rem;font-weight:400}
+
+  .qtext{font-family:var(--disp);font-weight:600;font-size:1.22rem;line-height:1.35;margin:0 0 1rem}
+  .opt{
+    display:flex;align-items:center;gap:.75rem;width:100%;text-align:left;
+    background:#fff;border:2px solid var(--line);border-radius:14px;
+    padding:.8rem .9rem;margin:0 0 .55rem;cursor:pointer;font:inherit;color:inherit;
+    transition:border-color .12s,background .12s,transform .1s;
+  }
+  .opt:active{transform:scale(.99)}
+  .opt:hover:not(:disabled){border-color:var(--light)}
+  .opt .k{
+    flex:0 0 30px;height:30px;border-radius:50%;background:var(--t1);color:var(--accent);
+    display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem;
+  }
+  .opt.right{border-color:var(--okline);background:var(--okbg)}
+  .opt.right .k{background:var(--ok);color:#fff}
+  .opt.wrong{border-color:var(--noline);background:var(--nobg)}
+  .opt.wrong .k{background:var(--no);color:#fff}
+  .opt:disabled{cursor:default}
+  .opt.dim{opacity:.45}
+
+  .typed{display:flex;gap:.5rem;margin:0 0 .6rem}
+  .typed input{
+    flex:1;font:inherit;font-size:1.1rem;padding:.75rem .9rem;border-radius:14px;
+    border:2px solid var(--line);background:#fff;color:var(--ink);min-width:0;
+  }
+  .typed input:focus{outline:none;border-color:var(--accent)}
+  .typed input.right{border-color:var(--okline);background:var(--okbg)}
+  .typed input.wrong{border-color:var(--noline);background:var(--nobg)}
+  .typed button{
+    font:inherit;font-weight:700;padding:.75rem 1.1rem;border-radius:14px;border:none;
+    background:var(--accent);color:#fff;cursor:pointer;
+  }
+  .typed button:disabled{opacity:.5;cursor:default}
+
+  .fb{border-radius:14px;padding:.85rem .95rem;margin:.7rem 0 0;line-height:1.5;font-size:.97rem}
+  .fb.y{background:var(--okbg);border:1px solid var(--okline)}
+  .fb.n{background:var(--nobg);border:1px solid var(--noline)}
+  .fb b{display:block;font-family:var(--disp);font-weight:800;margin-bottom:.2rem}
+  .fb.y b{color:var(--ok)}
+  .fb.n b{color:var(--no)}
+  .reveal{
+    background:none;border:none;color:var(--accent);font:inherit;font-size:.9rem;
+    text-decoration:underline;cursor:pointer;padding:.4rem 0;
+  }
+
+  /* ---- result ---- */
+  .score{text-align:center;padding:.5rem 0 .2rem}
+  .ring{
+    width:150px;height:150px;border-radius:50%;margin:0 auto .8rem;
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--disp);font-weight:800;font-size:2.4rem;color:var(--ink);
+    background:conic-gradient(var(--accent) var(--deg,0deg), var(--t3) 0deg);
+    position:relative;
+  }
+  .ring::after{content:"";position:absolute;inset:12px;background:#fff;border-radius:50%}
+  .ring span{position:relative;z-index:1}
+  .ring.pass{background:conic-gradient(var(--ok) var(--deg,0deg), var(--t3) 0deg)}
+  .verdict{font-family:var(--disp);font-weight:800;font-size:1.3rem;margin:.2rem 0 .3rem}
+  .verdict.pass{color:var(--ok)}
+  .verdict.fail{color:var(--gold)}
+  .breakdown{margin:1.1rem 0 0}
+  .brow{display:flex;align-items:center;gap:.6rem;padding:.5rem 0;border-bottom:1px solid var(--line)}
+  .brow:last-child{border-bottom:none}
+  .brow b{flex:1;font-weight:400;font-size:.95rem}
+  .brow i{font-style:normal;font-weight:700;font-size:.95rem}
+  .brow i.y{color:var(--ok)} .brow i.n{color:var(--no)}
+
+  .conf{position:fixed;inset:0;pointer-events:none;z-index:50;overflow:hidden}
+  .conf i{position:absolute;width:9px;height:14px;border-radius:2px;animation:fall 2.4s linear forwards}
+  @keyframes fall{
+    0%{transform:translateY(-20vh) rotate(0);opacity:1}
+    100%{transform:translateY(110vh) rotate(720deg);opacity:.9}
+  }
+
+  /* ---- nav ---- */
+  nav{
+    position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(248,246,253,.96);
+    border-top:1px solid var(--line);padding:.6rem 1rem;
+    padding-bottom:calc(.6rem + env(safe-area-inset-bottom,0px));
+    display:flex;gap:.5rem;max-width:46rem;margin:0 auto;
+  }
+  nav button{
+    flex:1;font:inherit;font-weight:700;padding:.75rem;border-radius:14px;cursor:pointer;
+    border:2px solid var(--line);background:#fff;color:var(--ink);
+  }
+  nav button.go{background:var(--accent);border-color:var(--accent);color:#fff}
+  nav button:disabled{opacity:.4;cursor:default}
+  .reset{display:block;margin:1.5rem auto 0;background:none;border:none;color:var(--grey);
+    font:inherit;font-size:.85rem;text-decoration:underline;cursor:pointer}
+  @media(min-width:560px){ .ico{flex-basis:52px;height:52px;font-size:1.2rem} h1{font-size:2.2rem} }
+
+  /* selected-but-unmarked, used during the test */
+  .opt.sel{border-color:var(--accent);background:var(--t1)}
+  .opt.sel .k{background:var(--accent);color:#fff}
+
+  /* result breakdown cards */
+  .rescard{
+    background:#fff;border:1px solid var(--line);border-left:5px solid var(--no);
+    border-radius:14px;padding:.85rem .95rem;margin:0 0 .6rem;
+  }
+  .rescard.y{border-left-color:var(--ok)}
+  .rhead{display:flex;gap:.6rem;align-items:flex-start;margin-bottom:.5rem}
+  .rno{
+    flex:0 0 26px;height:26px;border-radius:50%;background:var(--t1);color:var(--accent);
+    display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.82rem;
+  }
+  .rq{flex:1;font-weight:700;line-height:1.35;font-size:.97rem}
+  .rmark{font-weight:800;font-size:1.1rem;color:var(--no)}
+  .rescard.y .rmark{color:var(--ok)}
+  .rescard.y .rno{background:var(--okbg);color:var(--ok)}
+  .rrow{display:flex;gap:.6rem;font-size:.92rem;padding:.18rem 0 .18rem 2.1rem}
+  .rrow b{flex:0 0 5.2rem;font-weight:400;color:var(--grey)}
+  .rrow span{font-weight:700}
+  .rwhy{
+    margin:.55rem 0 0 2.1rem;padding:.6rem .75rem;background:var(--t2);
+    border-radius:10px;font-size:.9rem;line-height:1.45;color:var(--ink);
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="nm">Wolfie · Maths</div>
+  <div class="pill" id="pts">0 pts</div>
+  <div class="pill fire" id="streak" hidden>🔥 0</div>
+</header>
+<div class="bar"><i id="topbar"></i></div>
+<main id="main"></main>
+<nav id="nav" hidden></nav>
+<script>
+/* ===== Wolfie revision app: content ===== */
+/* k:'learn'  teaching screen
+   k:'q'      multiple choice, a = index of the correct option
+   k:'t'      typed answer, ans = list of acceptable strings      */
+
+const TOPICS = [
+
+/* ============ 1. EXPANDING BRACKETS ============ */
+{ id:'exp', name:'Expanding brackets', icon:'( )', blurb:'The big one for Monday',
+  items:[
+
+ {k:'learn', title:'What expanding actually means', html:`
+  <p class="big">The number outside has to reach <b>every</b> term inside.</p>
+  <div class="work">3(x + 4)
+
+draw the arrows:
+   3 &rarr; x    gives  3x
+   3 &rarr; 4    gives  12
+
+answer:  3x + 12</div>
+  <p class="tip"><b>Strategy 1. Draw the arrows.</b> Two arrows for two terms. If you have only
+  drawn one, you have only done half the question.</p>`},
+
+ {k:'q', q:'Expand &nbsp; 5(x + 2)', opts:['5x + 10','5x + 2','5x + 7','10x'], a:0,
+  why:'5 &times; x = 5x, and 5 &times; 2 = 10.'},
+
+ {k:'t', q:'Expand &nbsp; 7(x + 3)', ans:['7x+21','7x + 21'],
+  why:'7 &times; x = 7x, and 7 &times; 3 = 21.'},
+
+ {k:'learn', title:'The sign belongs to the number after it', html:`
+  <p class="big">When you read a bracket, the sign in front of a number is part of that number.</p>
+  <div class="work">4(x &minus; 3)
+
+the terms inside are   x   and   &minus;3
+                            &uarr; the minus comes too
+
+4 &times; x    =  4x
+4 &times; &minus;3   =  &minus;12
+
+answer:  4x &minus; 12</div>
+  <p class="tip"><b>Strategy 2.</b> Before you multiply anything, say the two terms out loud
+  <i>with</i> their signs. "x and minus three."</p>`},
+
+ {k:'q', q:'Expand &nbsp; 4(x &minus; 3)', opts:['4x &minus; 12','4x + 12','4x &minus; 3','x &minus; 12'], a:0,
+  why:'The terms are x and &minus;3. So 4x and &minus;12.'},
+
+ {k:'q', q:'Expand &nbsp; 3(2x &minus; 1)', opts:['6x + 3','6x &minus; 1','6x &minus; 3','5x &minus; 3'], a:2,
+  why:'3 &times; 2x = 6x, and 3 &times; &minus;1 = &minus;3.'},
+
+ {k:'learn', title:'A negative outside the bracket', html:`
+  <p class="big">A minus outside flips the sign of <b>both</b> terms inside.</p>
+  <div class="work">&minus;2(x + 5)
+
+&minus;2 &times; x   =  &minus;2x
+&minus;2 &times; 5   =  &minus;10
+answer:  &minus;2x &minus; 10
+
+
+&minus;5(x &minus; 2)
+
+&minus;5 &times; x    =  &minus;5x
+&minus;5 &times; &minus;2   =  +10      &larr; two minuses
+answer:  &minus;5x + 10</div>
+  <p class="tip"><b>Strategy 3.</b> Minus times minus is plus. If there is a minus outside
+  <i>and</i> a minus inside, that term comes out positive.</p>`},
+
+ {k:'q', q:'Expand &nbsp; &minus;3(x + 4)', opts:['&minus;3x + 12','3x + 12','&minus;3x &minus; 12','&minus;3x + 4'], a:2,
+  why:'&minus;3 &times; x = &minus;3x, and &minus;3 &times; 4 = &minus;12.'},
+
+ {k:'q', q:'Expand &nbsp; &minus;5(x &minus; 2)', opts:['&minus;5x &minus; 10','&minus;5x + 10','5x &minus; 10','&minus;5x &minus; 2'], a:1,
+  why:'&minus;5 &times; &minus;2 = +10. Two negatives make a positive.'},
+
+ {k:'t', q:'Expand &nbsp; &minus;2(3x &minus; 4)<br><span class="hint">type it like &nbsp;-6x+8</span>',
+  ans:['-6x+8','&minus;6x+8','-6x + 8'],
+  why:'&minus;2 &times; 3x = &minus;6x, and &minus;2 &times; &minus;4 = +8.'},
+
+ {k:'learn', title:'Two brackets, then collect', html:`
+  <p class="big">Expand each bracket completely. Only then collect the like terms.</p>
+  <div class="work">4(x + 1) &minus; 2(x &minus; 3)
+
+first bracket:    4(x + 1)   =  4x + 4
+second bracket:  &minus;2(x &minus; 3)  =  &minus;2x + 6
+                              &uarr; this is where marks go
+
+now collect:
+   4x &minus; 2x  =  2x
+   4 + 6     =  10
+
+answer:  2x + 10</div>
+  <p class="tip"><b>Strategy 4.</b> The sign in front of the second bracket belongs to it.
+  Treat it as &minus;2, not 2, and the rest looks after itself.</p>`},
+
+ {k:'q', q:'Expand and simplify &nbsp; 2(x + 5) + 3(x + 1)',
+  opts:['5x + 6','5x + 13','6x + 13','5x + 8'], a:1,
+  why:'2x + 10 + 3x + 3. Collect: 5x + 13.'},
+
+ {k:'q', q:'Expand and simplify &nbsp; 4(x + 1) &minus; 2(x &minus; 3)',
+  opts:['2x &minus; 2','6x + 10','2x + 10','2x + 7'], a:2,
+  why:'4x + 4 &minus; 2x + 6. The &minus;2 &times; &minus;3 gives +6. Collect: 2x + 10.'},
+
+ {k:'q', q:'Expand and simplify &nbsp; 5(x &minus; 2) &minus; 3(x + 4)',
+  opts:['2x + 2','8x &minus; 22','2x &minus; 22','2x + 22'], a:2,
+  why:'5x &minus; 10 &minus; 3x &minus; 12. Collect: 2x &minus; 22.'},
+
+ {k:'learn', title:'Double brackets: use a grid', html:`
+  <p class="big">Two brackets means four multiplications. A grid means you cannot miss one.</p>
+  <div class="work">(x + 3)(x + 5)
+
+           x      +3
+       &#9484;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9516;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9488;
+   x   &#9474;  x&sup2;   &#9474;  3x  &#9474;
+       &#9500;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9532;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9508;
+  +5   &#9474;  5x   &#9474;  15  &#9474;
+       &#9492;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9524;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9496;
+
+x&sup2; + 3x + 5x + 15
+x&sup2; + 8x + 15</div>
+  <p class="tip"><b>Strategy 5.</b> Four boxes, four answers. The two middle ones always add together.</p>`},
+
+ {k:'q', q:'Expand &nbsp; (x + 3)(x + 5)',
+  opts:['x&sup2; + 15','x&sup2; + 8x + 15','x&sup2; + 8x','x&sup2; + 15x + 8'], a:1,
+  why:'x&sup2;, then 3x + 5x = 8x, then 15.'},
+
+ {k:'q', q:'Expand &nbsp; (x + 6)(x &minus; 2)',
+  opts:['x&sup2; &minus; 4x &minus; 12','x&sup2; + 4x &minus; 12','x&sup2; + 8x &minus; 12','x&sup2; &minus; 12'], a:1,
+  why:'x&sup2;, then 6x &minus; 2x = +4x, then 6 &times; &minus;2 = &minus;12.'},
+
+ {k:'learn', title:'Squaring a bracket', html:`
+  <p class="big">(x &minus; 4)&sup2; does <b>not</b> mean x&sup2; &minus; 16. It means the bracket times itself.</p>
+  <div class="work">(x &minus; 4)&sup2;
+=  (x &minus; 4)(x &minus; 4)
+
+x &times; x     =  x&sup2;
+x &times; &minus;4    =  &minus;4x
+&minus;4 &times; x    =  &minus;4x
+&minus;4 &times; &minus;4   =  +16
+
+x&sup2; &minus; 8x + 16</div>
+  <p class="tip"><b>Strategy 6.</b> Write the bracket out twice before you touch it. That one habit
+  removes this whole mistake.</p>`},
+
+ {k:'q', q:'Expand &nbsp; (x &minus; 5)&sup2;',
+  opts:['x&sup2; &minus; 25','x&sup2; &minus; 10x + 25','x&sup2; + 25','x&sup2; &minus; 10x &minus; 25'], a:1,
+  why:'(x &minus; 5)(x &minus; 5). Middle: &minus;5x &minus; 5x = &minus;10x. Last: &minus;5 &times; &minus;5 = +25.'},
+
+ {k:'learn', title:'The check that catches everything', html:`
+  <p class="big">Not sure if you got it right? Put <b>x = 1</b> into the question and into your answer.</p>
+  <div class="work">question:  3(x + 4)
+your answer:  3x + 12
+
+with x = 1
+  3(1 + 4)   =  3 &times; 5   =  15
+  3(1) + 12  =  3 + 12   =  15      &#10003; match
+
+
+if you had written 3x + 4 by mistake
+  3(1) + 4  =  7        &#10007; does not match</div>
+  <p class="tip"><b>Strategy 7.</b> Ten seconds, and it catches almost every slip. Use it in the test
+  on anything you are unsure about.</p>`},
+
+ {k:'t', q:'Expand and simplify &nbsp; 3(x + 2) &minus; (x &minus; 4)<br><span class="hint">careful: the second bracket has an invisible &minus;1 in front</span>',
+  ans:['2x+10','2x + 10'],
+  why:'3x + 6, then &minus;1 &times; x = &minus;x and &minus;1 &times; &minus;4 = +4. So 3x + 6 &minus; x + 4 = 2x + 10.'},
+
+ {k:'q', q:'Expand &nbsp; (2x + 1)(x + 3)',
+  opts:['2x&sup2; + 7x + 3','2x&sup2; + 3','2x&sup2; + 6x + 3','2x&sup2; + 7x + 4'], a:0,
+  why:'2x&sup2;, then 6x + x = 7x, then 3.'},
+]},
+
+/* ============ 2. DERIVING FORMULAS ============ */
+{ id:'der', name:'Deriving formulas', icon:'C =', blurb:'Turning words into algebra',
+  items:[
+
+ {k:'learn', title:'Turning words into a formula', html:`
+  <p class="big">Find the bit that changes, give it a letter, and build the sentence in symbols.</p>
+  <div class="work">"A plumber charges &pound;45 to come out,
+ plus &pound;30 for every hour he works."
+
+what changes?   the number of hours  &rarr;  h
+
+&pound;45 to come out     &rarr;  45       (once, no letter)
+&pound;30 every hour     &rarr;  30h      (per hour, so &times; h)
+
+C  =  45 + 30h</div>
+  <p class="tip"><b>The rule:</b> a one-off charge gets no letter. A per-something charge gets the letter.</p>`},
+
+ {k:'q', q:'A taxi charges &pound;3 to start, then &pound;2 for every mile. Write a formula for the cost C of travelling m miles.',
+  opts:['C = 3m + 2','C = 3 + 2m','C = 5m','C = 2 + 3m'], a:1,
+  why:'&pound;3 happens once, so it gets no letter. &pound;2 every mile is 2m.'},
+
+ {k:'q', q:'A gym costs &pound;20 to join, then &pound;15 a month. Write a formula for the cost C for m months.',
+  opts:['C = 20m + 15','C = 35m','C = 20 + 15m','C = 15 + 20m'], a:2,
+  why:'Joining is a one-off 20. The monthly charge is 15m.'},
+
+ {k:'t', q:'Pens cost 40p each. Write a formula for the cost C pence of n pens.<br><span class="hint">type it like &nbsp;C=40n</span>',
+  ans:['c=40n','c = 40n','40n'],
+  why:'Every pen costs 40p, so n pens cost 40n pence. There is no one-off charge.'},
+
+ {k:'learn', title:'Words that tell you the operation', html:`
+  <p class="big">A few words do almost all the work.</p>
+  <div class="work">each, per, every, a mile, a month   &rarr;  MULTIPLY
+
+a one-off charge, to join,
+to come out, a booking fee          &rarr;  ADD, no letter
+
+shared between, split between       &rarr;  DIVIDE
+
+spends, loses, takes away           &rarr;  SUBTRACT</div>
+  <p class="tip">Read the sentence once and underline those words before you write anything.</p>`},
+
+ {k:'q', q:'Tickets cost &pound;8 each. There is also a &pound;2 booking fee on the whole order. Write a formula for the cost C of n tickets.',
+  opts:['C = 8n + 2','C = 8 + 2n','C = 10n','C = 8n + 2n'], a:0,
+  why:'&pound;8 each gives 8n. The booking fee is charged once, so just + 2.'},
+
+ {k:'q', q:'Sam has &pound;50 and spends &pound;7 a day. Write a formula for the money M he has left after d days.',
+  opts:['M = 50 + 7d','M = 7d &minus; 50','M = 50 &minus; 7d','M = 43d'], a:2,
+  why:'He starts with 50 and takes away 7 for every day, so 50 &minus; 7d.'},
+
+ {k:'q', q:'A bag of sweets has s sweets, shared equally between 5 people. How many does each person get?',
+  opts:['5s','s &minus; 5','s + 5','s/5'], a:3,
+  why:'Shared between means divide.'},
+
+ {k:'learn', title:'Formulas from shapes', html:`
+  <p class="big">Perimeter means add up every side. Then collect the like terms.</p>
+  <div class="work">rectangle:  x + 3 long,  x wide
+
+P  =  2 &times; long  +  2 &times; width
+   =  2(x + 3)  +  2x
+   =  2x + 6 + 2x
+   =  4x + 6</div>
+  <p class="tip">Notice this is an expanding brackets question in disguise. The two topics
+  turn up together all the time.</p>`},
+
+ {k:'q', q:'A rectangle is 2x long and x + 1 wide. Write a formula for its perimeter P.',
+  opts:['P = 3x + 1','P = 6x + 2','P = 2x&sup2; + 2x','P = 6x + 1'], a:1,
+  why:'2(2x) + 2(x + 1) = 4x + 2x + 2 = 6x + 2.'},
+
+ {k:'t', q:'A square has sides of length 2x. Write a formula for its perimeter P.<br><span class="hint">type it like &nbsp;P=8x</span>',
+  ans:['p=8x','p = 8x','8x'],
+  why:'Four sides, each 2x. So 4 &times; 2x = 8x.'},
+
+ {k:'q', q:'A rectangle is x + 5 long and 3 wide. Write a formula for its area A.',
+  opts:['A = 3x + 15','A = x + 8','A = 3x + 5','A = 2x + 16'], a:0,
+  why:'Area is long &times; wide, so 3(x + 5) = 3x + 15.'},
+]},
+
+/* ============ 3. RECURRING DECIMALS ============ */
+{ id:'rec', name:'Recurring decimals', icon:'0.3', blurb:'The ones that never stop',
+  items:[
+
+ {k:'learn', title:'Which fractions recur?', html:`
+  <p class="big">Break the bottom number into primes. That tells you everything.</p>
+  <div class="work">only 2s and 5s   &rarr;  it STOPS
+anything else    &rarr;  it RECURS
+
+1/8  = bottom 2&times;2&times;2      &rarr; 0.125    stops
+1/20 = bottom 2&times;2&times;5      &rarr; 0.05     stops
+1/6  = bottom 2&times;3        &rarr; 0.1666... recurs
+1/7  = bottom 7          &rarr; 0.142857... recurs</div>
+  <p class="tip">That prime factor skill is the same one you use for HCF. It keeps coming back.</p>`},
+
+ {k:'q', q:'Which one of these RECURS?', opts:['1/16','1/20','1/5','1/12'], a:3,
+  why:'12 = 2 &times; 2 &times; 3. The 3 is not a 2 or a 5, so it recurs. The others have only 2s and 5s.'},
+
+ {k:'q', q:'Which one of these does NOT recur?', opts:['1/6','3/16','2/9','1/11'], a:1,
+  why:'16 = 2&times;2&times;2&times;2, only 2s, so it stops at 0.1875.'},
+
+ {k:'learn', title:'Turning a recurring decimal into a fraction', html:`
+  <p class="big">Multiply so the repeating part lines up, then subtract it away.</p>
+  <div class="work">x    = 0.7777...
+10x  = 7.7777...      &times;10 shifts it one place
+
+10x &minus; x  =  7.7777... &minus; 0.7777...
+    9x    =  7
+
+     x    =  7/9</div>
+  <p class="tip"><b>One repeating digit</b> means &times;10, and the answer sits over <b>9</b>.</p>`},
+
+ {k:'q', q:'Write 0.4444... as a fraction.', opts:['4/10','4/9','44/99','2/9'], a:1,
+  why:'One repeating digit, so over 9. That gives 4/9.'},
+
+ {k:'t', q:'Write 0.5555... as a fraction.<br><span class="hint">type it like &nbsp;5/9</span>',
+  ans:['5/9'],
+  why:'One repeating digit, so it sits over 9.'},
+
+ {k:'learn', title:'When two digits repeat', html:`
+  <p class="big">Two repeating digits means you shift by two places instead of one.</p>
+  <div class="work">x     = 0.272727...
+100x  = 27.272727...     &times;100 this time
+
+100x &minus; x  =  27
+     99x    =  27
+
+       x    =  27/99
+            =  3/11      &larr; always simplify</div>
+  <p class="tip"><b>Two digits</b> means &times;100 and over <b>99</b>. Three digits means &times;1000 and over 999.</p>`},
+
+ {k:'q', q:'Write 0.1818... as a fraction in its simplest form.',
+  opts:['18/99','2/11','18/100','9/50'], a:1,
+  why:'18/99, and both divide by 9, giving 2/11.'},
+
+ {k:'q', q:'Write 0.3636... as a fraction in its simplest form.',
+  opts:['4/11','36/99','36/100','6/11'], a:0,
+  why:'36/99. Both divide by 9, giving 4/11.'},
+
+ {k:'t', q:'Write 0.8888... as a fraction.<br><span class="hint">type it like &nbsp;8/9</span>',
+  ans:['8/9'],
+  why:'One repeating digit, so over 9.'},
+
+ {k:'q', q:'0.272727... was worked out as 27/99. Why is that not the final answer?',
+  opts:['It is wrong','It has not been simplified','It should be over 100','It should be a decimal'], a:1,
+  why:'27/99 cancels to 3/11. A fraction answer is not finished until it is in its simplest form.'},
+]},
+
+/* ============ 4. HCF AND LCM ============ */
+{ id:'hcf', name:'HCF and LCM', icon:'∩', blurb:'Which way does the answer go?',
+  items:[
+
+ {k:'learn', title:'The two words', html:`
+  <p class="big">The whole topic comes down to which way the answer goes.</p>
+  <div class="work">HCF   highest common factor
+      biggest number that goes INTO both
+      you are CHOPPING things up
+      answer is SMALLER than your numbers
+
+LCM   lowest common multiple
+      smallest number they both go INTO
+      you are WAITING for them to line up
+      answer is BIGGER than your numbers</div>
+  <p class="tip"><b>The check:</b> look at the size of the answer. An HCF bigger than your
+  starting numbers means you picked the wrong one.</p>`},
+
+ {k:'q', q:'Find the HCF of 18 and 24.', opts:['72','3','6','12'], a:2,
+  why:'18 = 2&times;3&times;3 and 24 = 2&times;2&times;2&times;3. Shared: one 2 and one 3, giving 6.'},
+
+ {k:'q', q:'Find the LCM of 6 and 8.', opts:['24','2','48','14'], a:0,
+  why:'Multiples of 6: 6, 12, 18, 24. Multiples of 8: 8, 16, 24. First match is 24.'},
+
+ {k:'t', q:'Find the HCF of 15 and 20.', ans:['5'],
+  why:'Factors of 15: 1, 3, 5, 15. Factors of 20: 1, 2, 4, 5, 10, 20. Biggest shared is 5.'},
+
+ {k:'learn', title:'Doing it with prime factors', html:`
+  <p class="big">Break both into primes and sort them into a Venn.</p>
+  <div class="work">12 = 2 &times; 2 &times; 3
+18 = 2 &times; 3 &times; 3
+
+in both (middle):   2 and 3
+left over from 12:  2
+left over from 18:  3
+
+HCF  =  multiply the MIDDLE      2 &times; 3 = 6
+LCM  =  multiply EVERYTHING      2 &times; 2 &times; 3 &times; 3 = 36</div>
+  <p class="tip">One diagram gives you both answers.</p>`},
+
+ {k:'q', q:'Write 84 as a product of its prime factors.',
+  opts:['4 &times; 21','2 &times; 2 &times; 3 &times; 7','2 &times; 42','2 &times; 3 &times; 7'], a:1,
+  why:'84 &rarr; 2 &times; 42 &rarr; 2 &times; 2 &times; 21 &rarr; 2 &times; 2 &times; 3 &times; 7.'},
+
+ {k:'q', q:'Find the LCM of 9 and 12.', opts:['108','3','36','21'], a:2,
+  why:'9 = 3&times;3 and 12 = 2&times;2&times;3. Everything in the diagram: 2&times;2&times;3&times;3 = 36.'},
+
+ {k:'q', q:'Two buses leave together. One comes every 12 minutes, the other every 18. How long until they next leave together?',
+  opts:['216 minutes','6 minutes','30 minutes','36 minutes'], a:3,
+  why:'Waiting for them to line up, so LCM. That is 36 minutes.'},
+
+ {k:'q', q:'What is the biggest square tile that fits exactly on a floor 30 cm by 45 cm?',
+  opts:['15 cm','90 cm','5 cm','10 cm'], a:0,
+  why:'Chopping a space into equal pieces, so HCF. The HCF of 30 and 45 is 15.'},
+]},
+
+/* ============ 5. FRACTIONS, DECIMALS, PERCENTAGES ============ */
+{ id:'fdp', name:'Fractions, decimals, %', icon:'½', blurb:'Three ways of writing one number',
+  items:[
+
+ {k:'learn', title:'The three conversions', html:`
+  <p class="big">A half, 0.5 and 50% are the same number written three ways.</p>
+  <div class="work">fraction &rarr; decimal    divide top by bottom
+decimal  &rarr; percent    &times; 100
+percent  &rarr; fraction   over 100, then simplify
+
+worth knowing cold:
+  1/2 = 0.5  = 50%      1/5  = 0.2 = 20%
+  1/4 = 0.25 = 25%      1/10 = 0.1 = 10%
+  3/4 = 0.75 = 75%      1/3  = 0.333... = 33.3%</div>
+  <p class="tip">To compare them, turn everything into decimals and pad with zeros so they
+  are the same length. 0.5 is bigger than 0.45.</p>`},
+
+ {k:'q', q:'Write &nbsp;3/8&nbsp; as a decimal.', opts:['0.38','0.83','0.375','3.8'], a:2,
+  why:'3 &divide; 8 = 0.375.'},
+
+ {k:'t', q:'Write &nbsp;5/8&nbsp; as a decimal.', ans:['0.625','.625'],
+  why:'5 &divide; 8 = 0.625.'},
+
+ {k:'q', q:'Write 45% as a fraction in its simplest form.',
+  opts:['45/100','9/20','4/5','9/25'], a:1,
+  why:'45/100, and both divide by 5.'},
+
+ {k:'q', q:'Put these in order, smallest first.<br><b>0.6 &nbsp;&nbsp; 5/8 &nbsp;&nbsp; 62%</b>',
+  opts:['62%, 0.6, 5/8','5/8, 62%, 0.6','0.6, 5/8, 62%','0.6, 62%, 5/8'], a:3,
+  why:'As decimals: 0.600, 0.620, 0.625.'},
+
+ {k:'learn', title:'Percentage change: one multiplication', html:`
+  <p class="big">The whole thing is 100%, which is &times; 1. Work out what you end up with.</p>
+  <div class="work">increase by 15%  &rarr; 115%  &rarr;  &times; 1.15
+decrease by 35%  &rarr;  65%  &rarr;  &times; 0.65
+increase by 3%   &rarr; 103%  &rarr;  &times; 1.03
+decrease by 5%   &rarr;  95%  &rarr;  &times; 0.95
+
+to UNDO a multiplier, divide by it
+  &pound;48 after 20% off  &rarr;  48 &divide; 0.8  =  &pound;60</div>
+  <p class="tip">A 5% decrease is &times; 0.95, not &times; 0.5. Read the whole thing, not just the digit.</p>`},
+
+ {k:'q', q:'Increase 80 by 15%.', opts:['95','92','12','68'], a:1,
+  why:'&times; 1.15, so 80 &times; 1.15 = 92.'},
+
+ {k:'t', q:'A coat costs &pound;60. In a sale it is reduced by 35%. Find the sale price in pounds.<br><span class="hint">just type the number</span>',
+  ans:['39','39.00','£39'],
+  why:'&times; 0.65, so 60 &times; 0.65 = 39. Careful: 21 is the discount, not the price.'},
+
+ {k:'q', q:'A jacket costs &pound;48 after 20% off. What was the original price?',
+  opts:['&pound;57.60','&pound;68','&pound;60','&pound;38.40'], a:2,
+  why:'Undo the multiplier by dividing: 48 &divide; 0.8 = 60.'},
+
+ {k:'q', q:'A test is scored 18 out of 25. Write that as a percentage.',
+  opts:['36%','72%','18%','7%'], a:1,
+  why:'18 &divide; 25 = 0.72, then &times; 100 = 72%.'},
+
+ {k:'q', q:'Decrease 200 by 12%.', opts:['188','24','176','224'], a:2,
+  why:'&times; 0.88, so 200 &times; 0.88 = 176.'},
+]},
+
+/* ============ 6. FRACTIONS: ALL FOUR ============ */
+{ id:'fr4', name:'Fraction arithmetic', icon:'⅗', blurb:'Add, subtract, multiply, divide',
+  items:[
+
+ {k:'learn', title:'Adding and subtracting', html:`
+  <p class="big">The bottom number is the SIZE of the piece. The pieces have to match before you add.</p>
+  <div class="work">2/3 + 1/4
+
+LCM of 3 and 4 is 12
+2/3 = 8/12     bottom &times;4, so top &times;4
+1/4 = 3/12     bottom &times;3, so top &times;3
+
+8/12 + 3/12  =  11/12</div>
+  <p class="tip">Finding a common denominator IS finding the LCM. And 1/2 + 1/3 is never 2/5:
+  the bottoms never get added.</p>`},
+
+ {k:'q', q:'Work out &nbsp;2/3 + 1/4', opts:['3/7','11/12','2/12','8/12'], a:1,
+  why:'LCM 12: 8/12 + 3/12 = 11/12.'},
+
+ {k:'q', q:'Work out &nbsp;3/4 &minus; 1/6', opts:['2/2','9/12','7/12','1/2'], a:2,
+  why:'LCM 12: 9/12 &minus; 2/12 = 7/12.'},
+
+ {k:'q', q:'Work out &nbsp;5/8 &minus; 1/8', opts:['1/2','4/8','4/0','6/8'], a:0,
+  why:'Same bottom, so 4/8. That cancels to 1/2, and the question is not finished until it does.'},
+
+ {k:'t', q:'Work out &nbsp;1/3 + 1/6<br><span class="hint">simplest form, like &nbsp;1/2</span>',
+  ans:['1/2'],
+  why:'LCM 6: 2/6 + 1/6 = 3/6, which simplifies to 1/2.'},
+
+ {k:'learn', title:'Multiplying and dividing', html:`
+  <p class="big">These two are easier. Nothing has to match.</p>
+  <div class="work">MULTIPLY   tops &times; tops, bottoms &times; bottoms
+           2/5 &times; 3/4  =  6/20  =  3/10
+
+DIVIDE     keep the first, flip the second,
+           change &divide; into &times;
+           3/4 &divide; 1/2  =  3/4 &times; 2/1  =  6/4  =  1 1/2
+
+whole numbers go over 1:   9 &rarr; 9/1
+mixed numbers convert:     1 1/2 &rarr; 3/2</div>
+  <p class="tip">You never need a common denominator here. And only the SECOND fraction flips.</p>`},
+
+ {k:'q', q:'Work out &nbsp;2/5 &times; 3/4', opts:['6/9','3/10','5/20','8/15'], a:1,
+  why:'Straight across: 6/20, which cancels to 3/10.'},
+
+ {k:'q', q:'Work out &nbsp;1/2 &divide; 1/4', opts:['1/8','1/2','4','2'], a:3,
+  why:'1/2 &times; 4/1 = 4/2 = 2. There are two quarters in a half.'},
+
+ {k:'q', q:'Work out &nbsp;2/3 &times; 9', opts:['18/9','6','2/27','11/3'], a:1,
+  why:'Write 9 as 9/1. Then 2/3 &times; 9/1 = 18/3 = 6.'},
+
+ {k:'q', q:'Work out &nbsp;2/3 &divide; 4/5', opts:['8/15','10/12','5/6','3/5'], a:2,
+  why:'2/3 &times; 5/4 = 10/12, which cancels to 5/6.'},
+
+ {k:'t', q:'Work out &nbsp;5/6 + 3/4<br><span class="hint">as a mixed number, like &nbsp;1 7/12</span>',
+  ans:['1 7/12','17/12','1 and 7/12'],
+  why:'LCM 12: 10/12 + 9/12 = 19/12, which is 1 7/12.'},
+]},
+];
+
+/* ============ FINAL TEST ============ */
+const TEST = [
+ {k:'q', q:'Expand &nbsp; 6(x + 3)', opts:['6x + 3','6x + 18','6x + 9','12x'], a:1,
+  why:'6 &times; x = 6x and 6 &times; 3 = 18.'},
+ {k:'q', q:'Expand &nbsp; &minus;4(2x &minus; 3)', opts:['&minus;8x + 12','&minus;8x &minus; 12','8x &minus; 12','&minus;8x &minus; 3'], a:0,
+  why:'&minus;4 &times; 2x = &minus;8x, and &minus;4 &times; &minus;3 = +12.'},
+ {k:'t', q:'Expand and simplify &nbsp; 2(x + 5) &minus; 3(x &minus; 1)<br><span class="hint">type it like &nbsp;-x+13</span>',
+  ans:['-x+13','&minus;x+13','-x + 13','13-x'],
+  why:'2x + 10 &minus; 3x + 3 = &minus;x + 13. A negative x term is perfectly normal.'},
+ {k:'q', q:'Expand &nbsp; (x + 4)(x + 2)', opts:['x&sup2; + 8','x&sup2; + 6x + 8','x&sup2; + 8x + 6','x&sup2; + 6x'], a:1,
+  why:'x&sup2;, then 4x + 2x = 6x, then 8.'},
+ {k:'q', q:'Expand &nbsp; (x &minus; 3)&sup2;', opts:['x&sup2; &minus; 9','x&sup2; + 6x + 9','x&sup2; &minus; 6x + 9','x&sup2; &minus; 6x &minus; 9'], a:2,
+  why:'(x &minus; 3)(x &minus; 3). Middle &minus;6x, last +9.'},
+ {k:'q', q:'A plumber charges &pound;60 to come out plus &pound;25 an hour. Write a formula for the cost C of h hours.',
+  opts:['C = 60h + 25','C = 85h','C = 60 + 25h','C = 25 + 60h'], a:2,
+  why:'&pound;60 is a one-off, so no letter. &pound;25 an hour is 25h.'},
+ {k:'t', q:'A rectangle is 3x long and x + 2 wide. Write a formula for its perimeter P.<br><span class="hint">type it like &nbsp;P=8x+4</span>',
+  ans:['p=8x+4','p = 8x + 4','8x+4'],
+  why:'2(3x) + 2(x + 2) = 6x + 2x + 4 = 8x + 4.'},
+ {k:'q', q:'Sam has &pound;40 and spends &pound;6 a day. Write a formula for the money M left after d days.',
+  opts:['M = 40 + 6d','M = 6d &minus; 40','M = 34d','M = 40 &minus; 6d'], a:3,
+  why:'Starts with 40, takes away 6 for every day.'},
+ {k:'t', q:'Write 0.8888... as a fraction.<br><span class="hint">type it like &nbsp;8/9</span>',
+  ans:['8/9'],
+  why:'One repeating digit, so it sits over 9.'},
+ {k:'q', q:'Write 0.4545... as a fraction in its simplest form.',
+  opts:['45/99','9/20','5/11','45/100'], a:2,
+  why:'45/99, and both divide by 9, giving 5/11.'},
+ {k:'q', q:'Which one of these RECURS?', opts:['1/16','1/25','1/12','1/5'], a:2,
+  why:'12 = 2&times;2&times;3. The 3 means it recurs.'},
+ {k:'q', q:'Find the HCF of 24 and 36.', opts:['72','12','6','4'], a:1,
+  why:'24 = 2&times;2&times;2&times;3, 36 = 2&times;2&times;3&times;3. Shared: 2&times;2&times;3 = 12.'},
+ {k:'t', q:'Find the LCM of 8 and 12.', ans:['24'],
+  why:'8 = 2&times;2&times;2, 12 = 2&times;2&times;3. Everything: 2&times;2&times;2&times;3 = 24.'},
+ {k:'q', q:'Write 72 as a product of its prime factors.',
+  opts:['8 &times; 9','2 &times; 2 &times; 2 &times; 3 &times; 3','2 &times; 36','2 &times; 2 &times; 3 &times; 3'], a:1,
+  why:'72 &rarr; 8 &times; 9 &rarr; 2&times;2&times;2 and 3&times;3.'},
+ {k:'q', q:'Write &nbsp;5/8&nbsp; as a decimal.', opts:['0.58','0.625','0.85','0.675'], a:1,
+  why:'5 &divide; 8 = 0.625.'},
+ {k:'q', q:'Increase 150 by 20%.', opts:['170','30','180','120'], a:2,
+  why:'&times; 1.2, so 150 &times; 1.2 = 180.'},
+ {k:'t', q:'Decrease 80 by 25%. Type the number.', ans:['60'],
+  why:'&times; 0.75, so 80 &times; 0.75 = 60.'},
+ {k:'q', q:'Work out &nbsp;3/4 + 2/5', opts:['5/9','23/20','1 3/20','6/20'], a:2,
+  why:'LCM 20: 15/20 + 8/20 = 23/20, which is 1 3/20. Top-heavy answers get converted.'},
+ {k:'q', q:'Work out &nbsp;5/6 &minus; 1/3', opts:['4/3','3/6','1/2','4/6'], a:2,
+  why:'LCM 6: 5/6 &minus; 2/6 = 3/6, which simplifies to 1/2.'},
+ {k:'t', q:'Work out &nbsp;2/3 &divide; 1/6<br><span class="hint">type the whole number</span>',
+  ans:['4'],
+  why:'2/3 &times; 6/1 = 12/3 = 4.'},
+];
+
+/* ===== Wolfie revision app ===== */
+
+const PASS = 80;                 /* pass mark, in per cent */
+const KEY  = 'wolfie-rev-v2';
+
+let S = { ans:{}, pts:0, streak:0, best:0, test:null };
+try { const r = localStorage.getItem(KEY); if (r) S = Object.assign(S, JSON.parse(r)); } catch (e) {}
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+
+/* ---------- helpers ---------- */
+const $ = id => document.getElementById(id);
+const LETTERS = ['A','B','C','D','E'];
+
+/* deterministic shuffle per question, so the order is stable on a revisit
+   but is NOT the same position every time */
+function seeded(n){ let x = Math.sin(n) * 10000; return x - Math.floor(x); }
+function shuffle(arr, seed){
+  const a = arr.map((v,i)=>({v,i}));
+  for (let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(seeded(seed * 97 + i * 31) * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function norm(s){
+  return String(s).toLowerCase()
+    .replace(/\u2212/g,'-').replace(/\u00d7/g,'*').replace(/\u00f7/g,'/')
+    .replace(/£/g,'').replace(/\s+/g,'').replace(/\.$/,'');
+}
+function qid(tid, i){ return tid + ':' + i; }
+
+/* ---------- build the screen list ---------- */
+const SCREENS = [];
+TOPICS.forEach((t, ti) => t.items.forEach((it, ii) =>
+  SCREENS.push({ t:ti, i:ii, it })));
+
+function qTotal(ti){ return TOPICS[ti].items.filter(i => i.k !== 'learn').length; }
+function qRight(ti){
+  return TOPICS[ti].items.reduce((n, it, ii) =>
+    n + (it.k !== 'learn' && S.ans[qid(TOPICS[ti].id, ii)] === true ? 1 : 0), 0);
+}
+function qSeen(ti){
+  return TOPICS[ti].items.reduce((n, it, ii) =>
+    n + (it.k !== 'learn' && S.ans[qid(TOPICS[ti].id, ii)] !== undefined ? 1 : 0), 0);
+}
+function overallPct(){
+  let r = 0, t = 0;
+  TOPICS.forEach((_, ti) => { r += qRight(ti); t += qTotal(ti); });
+  return t ? Math.round(r / t * 100) : 0;
+}
+function allTopicsTried(){
+  return TOPICS.every((_, ti) => qSeen(ti) > 0);
+}
+
+/* ---------- chrome ---------- */
+function chrome(){
+  $('pts').textContent = S.pts + ' pts';
+  const st = $('streak');
+  if (S.streak > 1){ st.hidden = false; st.textContent = '🔥 ' + S.streak; }
+  else st.hidden = true;
+}
+
+/* ---------- menu ---------- */
+function menu(){
+  $('nav').hidden = true;
+  $('topbar').style.width = '0%';
+  chrome();
+  const pct = overallPct();
+  $('main').innerHTML = `
+    <h1>Maths revision</h1>
+    <p class="lede">Everything that is on Monday's test. Work through the topics, then try
+    the practice test at the end.</p>
+
+    <div class="panel">
+      <div class="ptop">
+        <b>${pct}%</b><span>of all practice questions right so far</span>
+      </div>
+      <div class="track">
+        <i style="width:${pct}%"></i>
+        <div class="goal" style="left:${PASS}%"></div>
+      </div>
+      <div class="goaltag"><span>target ${PASS}%</span></div>
+    </div>
+
+    ${TOPICS.map((t, ti) => {
+      const r = qRight(ti), n = qTotal(ti), p = n ? Math.round(r / n * 100) : 0;
+      return `<button class="card ${p >= PASS ? 'done' : ''}" data-t="${ti}">
+        <div class="crow">
+          <div class="ico">${t.icon}</div>
+          <div class="cmid">
+            <b>${t.name}</b>
+            <span>${t.blurb} · ${n} questions</span>
+          </div>
+          <div class="pct">${r}/${n}</div>
+        </div>
+        <div class="mini"><i style="width:${p}%"></i></div>
+      </button>`;
+    }).join('')}
+
+    <button class="card testcard ${allTopicsTried() ? '' : 'locked'}" data-test="1">
+      <div class="crow">
+        <div class="ico">%</div>
+        <div class="cmid">
+          <b>Practice test</b>
+          <span>${allTopicsTried()
+            ? (S.best ? 'Best so far: ' + S.best + '%' : TEST.length + ' questions · gives you a score')
+            : 'Try each topic at least once to unlock'}</span>
+        </div>
+        <div class="pct">${S.best ? S.best + '%' : '—'}</div>
+      </div>
+    </button>
+
+    <button class="reset" id="reset">Start again from scratch</button>`;
+
+  document.querySelectorAll('.card[data-t]').forEach(b =>
+    b.onclick = () => goTopic(+b.dataset.t));
+  const tb = document.querySelector('.card[data-test]');
+  tb.onclick = () => { if (allTopicsTried()) startTest(); };
+  $('reset').onclick = () => {
+    if (confirm('Clear all your progress and start again?')){
+      S = { ans:{}, pts:0, streak:0, best:0, test:null }; save(); menu();
+    }
+  };
+}
+
+/* ---------- topic screens ---------- */
+let cur = -1;
+function goTopic(ti){ cur = SCREENS.findIndex(s => s.t === ti); draw(); }
+
+function draw(){
+  if (cur < 0 || cur >= SCREENS.length) return menu();
+  const s = SCREENS[cur];
+  const T = TOPICS[s.t], it = s.it;
+  const inT = SCREENS.filter(x => x.t === s.t);
+  const at = inT.findIndex(x => x === s) + 1;
+  $('topbar').style.width = (at / inT.length * 100) + '%';
+  chrome();
+
+  const main = $('main');
+  if (it.k === 'learn'){
+    main.innerHTML = `<div class="sheet">
+      <div class="tag">Learn it</div>
+      <h2>${it.title}</h2>${it.html}</div>`;
+  } else {
+    const id = qid(T.id, s.i);
+    const done = S.ans[id] !== undefined;
+    const qNo = T.items.slice(0, s.i).filter(x => x.k !== 'learn').length + 1;
+    main.innerHTML = `<div class="sheet">
+      <div class="tag qq">Question ${qNo} of ${qTotal(s.t)}</div>
+      <div class="qtext">${it.q}</div>
+      <div id="body"></div>
+      <div id="fb"></div></div>`;
+    it.k === 'q' ? drawMC(it, id, done) : drawTyped(it, id, done);
+  }
+
+  $('nav').hidden = false;
+  $('nav').innerHTML = `
+    <button id="prev" ${cur === 0 || SCREENS[cur-1].t !== s.t ? 'disabled' : ''}>Back</button>
+    <button id="menu">Menu</button>
+    <button id="next" class="go">${
+      cur === SCREENS.length - 1 || SCREENS[cur+1].t !== s.t ? 'Finish' : 'Next'}</button>`;
+  $('prev').onclick = () => { cur--; draw(); };
+  $('menu').onclick = menu;
+  $('next').onclick = () => {
+    if (cur === SCREENS.length - 1 || SCREENS[cur+1].t !== s.t) return menu();
+    cur++; draw();
+  };
+}
+
+function drawMC(it, id, done){
+  const order = shuffle(it.opts, id.split('').reduce((a,c)=>a+c.charCodeAt(0),0));
+  const body = $('body');
+  body.innerHTML = order.map((o, k) =>
+    `<button class="opt" data-orig="${o.i}">
+      <span class="k">${LETTERS[k]}</span><span>${o.v}</span></button>`).join('');
+
+  const finish = (chosen) => {
+    const ok = chosen === it.a;
+    body.querySelectorAll('.opt').forEach(b => {
+      b.disabled = true;
+      const oi = +b.dataset.orig;
+      if (oi === it.a) b.classList.add('right');
+      else if (oi === chosen) b.classList.add('wrong');
+      else b.classList.add('dim');
+    });
+    mark(id, ok, it.why);
+  };
+
+  if (done){
+    const prev = S.ans[id];
+    body.querySelectorAll('.opt').forEach(b => {
+      b.disabled = true;
+      if (+b.dataset.orig === it.a) b.classList.add('right');
+      else b.classList.add('dim');
+    });
+    show(prev === true, it.why, true);
+  } else {
+    body.querySelectorAll('.opt').forEach(b =>
+      b.onclick = () => finish(+b.dataset.orig));
+  }
+}
+
+function drawTyped(it, id, done){
+  const body = $('body');
+  body.innerHTML = `
+    <div class="typed">
+      <input id="inp" type="text" autocomplete="off" autocapitalize="off" spellcheck="false"
+        placeholder="your answer" ${done ? 'disabled' : ''}>
+      <button id="chk" ${done ? 'disabled' : ''}>Check</button>
+    </div>
+    ${done ? '' : '<button class="reveal" id="rv">Show me the answer</button>'}`;
+
+  const go = () => {
+    const v = $('inp').value.trim();
+    if (!v) return;
+    const ok = it.ans.some(a => norm(a) === norm(v));
+    $('inp').disabled = true; $('chk').disabled = true;
+    $('inp').classList.add(ok ? 'right' : 'wrong');
+    const rv = $('rv'); if (rv) rv.remove();
+    mark(id, ok, it.why + (ok ? '' : ' The answer is <b>' + it.ans[0] + '</b>.'));
+  };
+
+  if (done){
+    $('inp').value = it.ans[0];
+    $('inp').classList.add(S.ans[id] === true ? 'right' : 'wrong');
+    show(S.ans[id] === true, it.why, true);
+  } else {
+    $('chk').onclick = go;
+    $('inp').onkeydown = e => { if (e.key === 'Enter') go(); };
+    $('rv').onclick = () => {
+      $('inp').value = it.ans[0]; $('inp').disabled = true; $('chk').disabled = true;
+      $('rv').remove();
+      $('fb').innerHTML = `<div class="fb n"><b>Here it is</b>${it.why}</div>`;
+    };
+  }
+}
+
+const YES = ['Nice one.','Correct.','That is it.','Spot on.','Yes.'];
+const NO  = ['Not this time.','Close.','Have another look.','Not quite.'];
+
+function mark(id, ok, why){
+  const first = S.ans[id] === undefined;
+  S.ans[id] = ok;
+  if (ok){
+    if (first){ S.streak++; S.pts += 10 + Math.min(S.streak, 5) * 2; }
+  } else S.streak = 0;
+  save(); chrome();
+  show(ok, why, false);
+}
+
+function show(ok, why, quiet){
+  const msg = ok ? YES[Math.floor(Math.random()*YES.length)]
+                 : NO[Math.floor(Math.random()*NO.length)];
+  $('fb').innerHTML = `<div class="fb ${ok?'y':'n'}">
+    <b>${quiet ? (ok ? 'You got this one' : 'You missed this one') : msg}</b>${why}</div>`;
+}
+
+/* ---------- final test ----------
+   No feedback at all until the end: he picks, he can change his mind,
+   and everything is marked when he finishes. */
+let tAt = 0, tGiven = [], tAns = [];
+
+function startTest(){
+  tAt = 0;
+  tGiven = new Array(TEST.length).fill(null);
+  tAns = [];
+  drawTest();
+}
+
+/* read whatever is on screen into tGiven */
+function captureTest(){
+  const it = TEST[tAt];
+  if (it.k === 'q'){
+    const sel = document.querySelector('.opt.sel');
+    tGiven[tAt] = sel ? +sel.dataset.orig : null;
+  } else {
+    const v = $('inp') ? $('inp').value.trim() : '';
+    tGiven[tAt] = v || null;
+  }
+}
+
+function drawTest(){
+  const it = TEST[tAt];
+  $('topbar').style.width = (tAt / TEST.length * 100) + '%';
+  chrome();
+
+  const answered = tGiven[tAt] !== null && tGiven[tAt] !== undefined;
+
+  $('main').innerHTML = `<div class="sheet">
+    <div class="tag qq">Test · question ${tAt+1} of ${TEST.length}</div>
+    <div class="qtext">${it.q}</div>
+    <div id="body"></div>
+    <p class="hint" style="margin:.9rem 0 0">
+      No answers until the end. You can change your mind before you move on.</p>
+  </div>`;
+
+  if (it.k === 'q'){
+    const order = shuffle(it.opts, 700 + tAt * 13);
+    $('body').innerHTML = order.map((o, k) =>
+      `<button class="opt ${tGiven[tAt] === o.i ? 'sel' : ''}" data-orig="${o.i}">
+        <span class="k">${LETTERS[k]}</span><span>${o.v}</span></button>`).join('');
+    $('body').querySelectorAll('.opt').forEach(b => b.onclick = () => {
+      $('body').querySelectorAll('.opt').forEach(x => x.classList.remove('sel'));
+      b.classList.add('sel');
+      $('next').disabled = false;
+    });
+  } else {
+    $('body').innerHTML = `<div class="typed">
+      <input id="inp" type="text" autocomplete="off" autocapitalize="off"
+        spellcheck="false" placeholder="your answer"
+        value="${answered ? String(tGiven[tAt]).replace(/"/g,'&quot;') : ''}">
+    </div>`;
+    const sync = () => { $('next').disabled = !$('inp').value.trim(); };
+    $('inp').oninput = sync;
+    $('inp').onkeydown = e => {
+      if (e.key === 'Enter' && $('inp').value.trim()){ e.preventDefault(); $('next').click(); }
+    };
+  }
+
+  $('nav').hidden = false;
+  $('nav').innerHTML = `
+    <button id="prev" ${tAt === 0 ? 'disabled' : ''}>Back</button>
+    <button id="quit">Quit</button>
+    <button id="next" class="go" ${answered ? '' : 'disabled'}>${
+      tAt === TEST.length - 1 ? 'Finish' : 'Next'}</button>`;
+
+  $('prev').onclick = () => { captureTest(); tAt--; drawTest(); };
+  $('quit').onclick = () => {
+    if (confirm('Leave the test? Your score will not be saved.')) menu();
+  };
+  $('next').onclick = () => {
+    captureTest();
+    if (tAt === TEST.length - 1) testResult(); else { tAt++; drawTest(); }
+  };
+}
+
+function testResult(){
+  tAns = TEST.map((it, i) => {
+    const g = tGiven[i];
+    if (g === null || g === undefined) return false;
+    return it.k === 'q' ? g === it.a : it.ans.some(x => norm(x) === norm(g));
+  });
+
+  const right = tAns.filter(Boolean).length;
+  const pct = Math.round(right / TEST.length * 100);
+  const pass = pct >= PASS;
+  if (pct > S.best){ S.best = pct; save(); }
+  $('topbar').style.width = '100%';
+
+  const gave = (it, g) => {
+    if (g === null || g === undefined) return '<i>left blank</i>';
+    return it.k === 'q' ? it.opts[g] : String(g);
+  };
+  const right_of = it => it.k === 'q' ? it.opts[it.a] : it.ans[0];
+
+  $('main').innerHTML = `<div class="sheet">
+    <div class="score">
+      <div class="ring ${pass?'pass':''}" style="--deg:${pct*3.6}deg"><span>${pct}%</span></div>
+      <div class="verdict ${pass?'pass':'fail'}">
+        ${pass ? 'Target hit' : 'Not quite there yet'}</div>
+      <p class="lede" style="margin:0">
+        ${right} out of ${TEST.length} right. The target is ${PASS}%.
+        ${pass ? 'That is test-ready.' : 'Have a look at the ones you missed, then try again.'}</p>
+    </div>
+  </div>
+
+  <h2 style="margin:1.3rem 0 .7rem">Every question</h2>
+  ${TEST.map((it, i) => `
+    <div class="rescard ${tAns[i]?'y':'n'}">
+      <div class="rhead">
+        <span class="rno">${i+1}</span>
+        <span class="rq">${it.q.replace(/<br>[\s\S]*$/,'')}</span>
+        <span class="rmark">${tAns[i]?'✓':'✗'}</span>
+      </div>
+      <div class="rrow"><b>You put</b><span>${gave(it, tGiven[i])}</span></div>
+      ${tAns[i] ? '' : `<div class="rrow"><b>Answer</b><span>${right_of(it)}</span></div>`}
+      <div class="rwhy">${it.why}</div>
+    </div>`).join('')}`;
+
+  $('nav').hidden = false;
+  $('nav').innerHTML = `
+    <button id="again">Try again</button>
+    <button id="home" class="go">Back to topics</button>`;
+  $('again').onclick = startTest;
+  $('home').onclick = menu;
+  window.scrollTo({top:0});
+  if (pass) confetti();
+}
+
+function confetti(){
+  const cols = ['#6B3FB5','#8B5CF6','#D98A1F','#1F7A4D','#A78BDA'];
+  const wrap = document.createElement('div');
+  wrap.className = 'conf';
+  for (let i = 0; i < 60; i++){
+    const b = document.createElement('i');
+    b.style.left = Math.random()*100 + 'vw';
+    b.style.background = cols[i % cols.length];
+    b.style.animationDelay = (Math.random()*0.7) + 's';
+    wrap.appendChild(b);
+  }
+  document.body.appendChild(wrap);
+  setTimeout(() => wrap.remove(), 3400);
+}
+
+menu();
+
+</script>
+</body>
+</html>
